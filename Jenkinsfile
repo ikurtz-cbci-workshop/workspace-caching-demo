@@ -4,6 +4,12 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES') 
     }
     stages {
+        stage ('cleanWS') {
+            steps {
+                cleanWs()
+            }
+        }
+    stages {
         stage('Build') {
             agent { label 'maven' }
             steps {
@@ -15,5 +21,6 @@ pipeline {
                     writeCache includes: '.m2/**', name: 'mvn-cache'
             }
         }
-    }
+     }
+  }
 }
