@@ -4,7 +4,7 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES') 
     }
     stages {
-        stage ('cleanWS') {
+        stage('cleanWS') {
             steps {
                 cleanWs()
             }
