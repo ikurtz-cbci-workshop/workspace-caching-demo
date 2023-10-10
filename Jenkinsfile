@@ -17,7 +17,7 @@ pipeline {
                 sh """
                 mvn -Dmaven.repo.local=.m2 -DskipTests=true package
                 """
-                writeCache saveTo: 'mvn-cache', paths: '.m2/**'
+                writeCache name: 'mvn-cache', includes: '.m2/**'
             }
         }
     }
