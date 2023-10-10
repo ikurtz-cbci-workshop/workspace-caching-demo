@@ -1,23 +1,11 @@
 pipeline {
-    agent {
-        kubernetes {
-            yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: maven
-    image: maven:3.9.4-eclipse-temurin-11
-    command:
-    - sleep
-    args:
-    - infinity
-'''
-            defaultContainer 'maven'
-        }
+    agent none
+    options {
+        timeout(time: 10, unit: 'MINUTES') 
     }
     stages {
         stage('Build') {
+            agent { label 'maven' }
             steps {
                     checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/matrix-auth-plugin.git']])
                     readCache 'mvn-deps'
