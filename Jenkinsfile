@@ -8,7 +8,7 @@ pipeline {
             agent { label 'maven' }
             steps {
                 container ('maven') {
-                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/generic-webhook-trigger-plugin.git']])
+                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/kubernetes-plugin']])
                     readCache 'mvn-cache'
                     sh """
                     mvn -Dmaven.repo.local=.m2 -DskipTests=true package
