@@ -1,14 +1,8 @@
 pipeline {
-    agent { label 'maven' }
+    agent none
     options {
         timeout(time: 10, unit: 'MINUTES') 
     }
-    stages {
-        stage('cleanWS') {
-            steps {
-                cleanWs()
-            }
-        }
         stage('Build') {
             agent { label 'maven' }
             steps {
@@ -23,4 +17,3 @@ pipeline {
             }
         }
     }
-}
