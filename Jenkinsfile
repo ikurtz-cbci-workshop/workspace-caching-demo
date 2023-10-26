@@ -19,8 +19,8 @@ pipeline {
                     mvn -Dmaven.repo.local=.m2 -DskipTests=true package
                     """
                     writeCache includes: '.m2/**', name: 'mvn-cache'
+                }
             }
         }
     }
-  }
 }
