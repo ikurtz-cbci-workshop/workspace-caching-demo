@@ -3,6 +3,7 @@ pipeline {
     options {
         timeout(time: 10, unit: 'MINUTES') 
     }
+    stages {
         stage('Build') {
             agent { label 'maven' }
             steps {
@@ -17,3 +18,4 @@ pipeline {
             }
         }
     }
+}
