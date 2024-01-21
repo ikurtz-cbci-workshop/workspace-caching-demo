@@ -27,7 +27,7 @@ pipeline {
             steps {
                 container ('maven') {
                     sh """
-                    mvn -Dmaven.repo.local=.m2 -DskipTests=true package
+                    ./mvn -Dmaven.repo.local=.m2 -DskipTests=true package
                     """
                 }
             }
