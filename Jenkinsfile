@@ -4,15 +4,32 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES') 
     }
     stages {
+        stage('Checkout') {
+            agent { label 'maven' }
+            steps {
+                container ('maven') {
+                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/kubernetes-plugin.git']])
+                }
+            }
+        }
+        
+        stage('Read Cache') {
+            steps {
+                readCache 'mvn-cache'
+            }
+        }
+
         stage('Build') {
             agent { label 'maven' }
             steps {
                 container ('maven') {
-                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/matrix-auth-plugin']])
-                    readCache 'mvn-cache'
                     sh """
-                    mvn -Dmaven.repo.local=.m2 -DskipTests=true package
+                    mvn clean verify -Dmaven.repo.local=.m2 -DskipTests=true package
                     """
+                }
+            }
+            post {
+                success {
                     writeCache includes: '.m2/**', name: 'mvn-cache'
                 }
             }
