@@ -8,7 +8,7 @@ pipeline {
             agent { label 'maven' }
             steps {
                 container ('maven') {
-                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/kubernetes-plugin.git']])
+                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ikurtz-cbci-workshop/simple-java-maven-app.git']])
                 }
             }
         }
