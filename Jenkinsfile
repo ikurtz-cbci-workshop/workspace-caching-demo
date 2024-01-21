@@ -15,7 +15,9 @@ pipeline {
         
         stage('Read Cache') {
             steps {
-                readCache 'mvn-cache'
+                container ('maven') {
+                    readCache 'mvn-cache'
+                }
             }
         }
 
