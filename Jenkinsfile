@@ -27,13 +27,13 @@ pipeline {
             steps {
                 container ('maven') {
                     sh """
-                    ./mvn -Dmaven.repo.local=.m2 -DskipTests=true package
+                    mvn -Dmaven.repo.local=maven-repo -DskipTests=true package
                     """
                 }
             }
             post {
                 success {
-                    writeCache includes: '.m2/**', name: 'mvn-cache'
+                    writeCache includes: 'maven-repo/**', name: 'mvn-cache'
                 }
             }
         }
