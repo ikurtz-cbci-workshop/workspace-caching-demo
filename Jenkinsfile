@@ -27,7 +27,7 @@ pipeline {
             steps {
                 container ('maven') {
                     sh """
-                    ./mvnw clean -Dmaven.repo.local=.m2 -DskipTests=true
+                    ./mvnw clean verify -Dmaven.repo.local=.m2 -DskipTests=true
                     """
                 }
             }
