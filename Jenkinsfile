@@ -14,6 +14,7 @@ pipeline {
         }
         
         stage('Read Cache') {
+            agent { label 'maven' }
             steps {
                 container ('maven') {
                     readCache 'mvn-cache'
