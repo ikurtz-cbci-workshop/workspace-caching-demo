@@ -9,7 +9,7 @@ pipeline {
             steps {
                 container ('maven') {
                     checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jenkinsci/kubernetes-plugin.git']])
-                    readCache 'mvn-cache'
+                    readCache name:'mvn-cache'
                     sh """
                     mvn -Dmaven.repo.local=.m2 -DskipTests=true package
                     """
