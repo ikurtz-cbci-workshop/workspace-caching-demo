@@ -1,0 +1,101 @@
+def executeScript(stageName) {
+    executeScript(stageName, 20)
+}
+
+def executeScript(stageName, iterations) {
+    for (int i = 1; i <= iterations; ++i) {
+        echo "This is branch ${stageName} => ${i}/${iterations}"
+        sh '''
+                        #!/bin/bash
+                        #sleep "$(( RANDOM % 10 ))"
+                        #sleep 1
+                        '''
+    }
+}
+pipeline {
+    agent none
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M3"
+    }
+    environment {
+        MAX = 1
+    }
+    stages {
+      agent { label 'maven' }
+        stage('Parallel Stage') {
+            failFast true
+            parallel {
+                stage('Branch A') {
+                    steps {
+                        executeScript('Branch A')
+                    }
+                }
+                stage('Branch B') {
+                    stages {
+                        stage('Nested B1') {
+                            steps {
+                                script {
+                                    executeScript('Nested B1 within Branch B')
+                                }
+                            }
+                        }
+                        stage('Nested B2') {
+                            steps {
+                                executeScript('Nested B2 within Branch B')
+                            }
+                        }
+                    }
+                }
+                stage('Branch C') {
+                    stages {
+                        stage('Nested C1') {
+                            steps {
+                                executeScript('Nested C1 within Branch C')
+                            }
+                        }
+                        stage('Nested C2') {
+                            stages {
+                                stage('Nested C21') {
+                                    steps {
+                                        executeScript('Nested C21 within Branch C')
+                                    }
+                                }
+                                stage('Nested C22') {
+                                    steps {
+                                        executeScript('Nested C22 within Branch C')
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            agent { label 'maven' }
+            steps {
+              container ('maven') {
+                // Get some code from a GitHub repository
+                git 'https://github.com/jgreffe/simple-maven-project-with-tests.git'
+
+                // Run Maven on a Unix agent.
+                sh "mvn -X -Dstyle.color=always -Dfaker.count=$MAX -Dfaker.sleepMin=1 -Dfaker.sleepMax=10 -Dmaven.test.failure.ignore=true clean package"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
+              }
+            }
+          }
+        }
+      }
