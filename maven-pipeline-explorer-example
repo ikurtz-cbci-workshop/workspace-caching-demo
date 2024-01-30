@@ -18,10 +18,9 @@ pipeline {
         MAX = 1
     }
     stages {
-        stage('Agent') {
-            agent { label 'maven' }
         stage('Parallel Stage') {
             failFast true
+            agent { label 'maven' }
             parallel {
                 stage('Branch A') {
                     steps {
@@ -30,6 +29,7 @@ pipeline {
                     }
                 }
                 stage('Branch B') {
+                    agent { label 'maven' }
                     stages {
                         stage('Nested B1') {
                             steps {
@@ -46,6 +46,7 @@ pipeline {
                     }
                 }
                 stage('Branch C') {
+                    agent { label 'maven' }
                     stages {
                         stage('Nested C1') {
                             steps {
