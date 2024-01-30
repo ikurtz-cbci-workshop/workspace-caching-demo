@@ -71,7 +71,9 @@ pipeline {
             }
         }
         stage('Build') {
+            agent { label 'maven' }
             steps {
+                container ('maven') {
                 // Get some code from a GitHub repository
                 git 'https://github.com/jgreffe/simple-maven-project-with-tests.git'
 
@@ -93,3 +95,4 @@ pipeline {
             }
         }
     }
+}
