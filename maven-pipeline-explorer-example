@@ -19,15 +19,16 @@ pipeline {
     }
     stages {
         stage('Parallel Stage') {
-            agent { label 'maven' }
             failFast true
             parallel {
                 stage('Branch A') {
+                    agent { label 'maven' }
                     steps {
                         executeScript('Branch A')
                     }
                 }
                 stage('Branch B') {
+                    agent { label 'maven' }
                     stages {
                         stage('Nested B1') {
                             steps {
@@ -44,6 +45,7 @@ pipeline {
                     }
                 }
                 stage('Branch C') {
+                    agent { label 'maven' }
                     stages {
                         stage('Nested C1') {
                             steps {
