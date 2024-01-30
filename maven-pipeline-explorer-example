@@ -13,13 +13,13 @@ def executeScript(stageName, iterations) {
     }
 }
 pipeline {
-    agent none
+    agent any
     environment {
         MAX = 1
     }
     stages {
         stage('Parallel Stage') {
-            agent { label 'maven' }
+            failFast true
             parallel {
                 stage('Branch A') {
                     steps {
@@ -28,7 +28,6 @@ pipeline {
                     }
                 }
                 stage('Branch B') {
-                    agent { label 'maven' }
                     stages {
                         stage('Nested B1') {
                             steps {
@@ -45,7 +44,6 @@ pipeline {
                     }
                 }
                 stage('Branch C') {
-                    agent { label 'maven' }
                     stages {
                         stage('Nested C1') {
                             steps {
@@ -71,9 +69,7 @@ pipeline {
             }
         }
         stage('Build') {
-            agent { label 'maven' }
             steps {
-              container ('maven') {
                 // Get some code from a GitHub repository
                 git 'https://github.com/jgreffe/simple-maven-project-with-tests.git'
 
@@ -94,4 +90,3 @@ pipeline {
               }
             }
           }
-        }
