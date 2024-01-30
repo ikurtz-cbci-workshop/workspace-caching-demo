@@ -1,5 +1,4 @@
 def executeScript(stageName) {
-def executeScript(stageName) {
     executeScript(stageName, 20)
 }
 
@@ -92,4 +91,3 @@ pipeline {
             }
         }
     }
-}
