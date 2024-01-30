@@ -43,20 +43,24 @@ pipeline {
 
         stage('Parallel Stage') {
             failFast true
-            parallel (
-                "Branch A": {
-                    executeScript('Branch A')
-                },
-                "Branch B": {
-                    executeScript('Nested B1 within Branch B')
-                    executeScript('Nested B2 within Branch B')
-                },
-                "Branch C": {
-                    executeScript('Nested C1 within Branch C')
-                    executeScript('Nested C21 within Branch C')
-                    executeScript('Nested C22 within Branch C')
+            steps {
+                script {
+                    parallel (
+                        "Branch A": {
+                            executeScript('Branch A')
+                        },
+                        "Branch B": {
+                            executeScript('Nested B1 within Branch B')
+                            executeScript('Nested B2 within Branch B')
+                        },
+                        "Branch C": {
+                            executeScript('Nested C1 within Branch C')
+                            executeScript('Nested C21 within Branch C')
+                            executeScript('Nested C22 within Branch C')
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }
