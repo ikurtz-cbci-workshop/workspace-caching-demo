@@ -18,13 +18,15 @@ pipeline {
         MAX = 1
     }
     stages {
-        stage('Parallel Stage') {
+        stage('Agent') {
             agent { label 'maven' }
+        stage('Parallel Stage') {
             failFast true
             parallel {
                 stage('Branch A') {
                     steps {
                         executeScript('Branch A')
+                        }
                     }
                 }
                 stage('Branch B') {
