@@ -6,68 +6,19 @@ def executeScript(stageName, iterations) {
     for (int i = 1; i <= iterations; ++i) {
         echo "This is branch ${stageName} => ${i}/${iterations}"
         sh '''
-                        #!/bin/bash
-                        #sleep "$(( RANDOM % 10 ))"
-                        #sleep 1
-                        '''
+            #!/bin/bash
+            #sleep "$(( RANDOM % 10 ))"
+            #sleep 1
+        '''
     }
 }
+
 pipeline {
     agent any
     environment {
         MAX = 1
     }
     stages {
-        stage('Parallel Stage') {
-            failFast true
-            parallel {
-                stage('Branch A') {
-                    steps {
-                        executeScript('Branch A')
-                        }
-                    }
-                }
-                stage('Branch B') {
-                    stages {
-                        stage('Nested B1') {
-                            steps {
-                                script {
-                                    executeScript('Nested B1 within Branch B')
-                                }
-                            }
-                        }
-                        stage('Nested B2') {
-                            steps {
-                                executeScript('Nested B2 within Branch B')
-                            }
-                        }
-                    }
-                }
-                stage('Branch C') {
-                    stages {
-                        stage('Nested C1') {
-                            steps {
-                                executeScript('Nested C1 within Branch C')
-                            }
-                        }
-                        stage('Nested C2') {
-                            stages {
-                                stage('Nested C21') {
-                                    steps {
-                                        executeScript('Nested C21 within Branch C')
-                                    }
-                                }
-                                stage('Nested C22') {
-                                    steps {
-                                        executeScript('Nested C22 within Branch C')
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
         stage('Build') {
             steps {
                 // Get some code from a GitHub repository
@@ -87,6 +38,25 @@ pipeline {
                     junit '**/target/surefire-reports/TEST-*.xml'
                     archiveArtifacts 'target/*.jar'
                 }
-              }
             }
-          }
+        }
+
+        stage('Parallel Stage') {
+            failFast true
+            parallel (
+                "Branch A": {
+                    executeScript('Branch A')
+                },
+                "Branch B": {
+                    executeScript('Nested B1 within Branch B')
+                    executeScript('Nested B2 within Branch B')
+                },
+                "Branch C": {
+                    executeScript('Nested C1 within Branch C')
+                    executeScript('Nested C21 within Branch C')
+                    executeScript('Nested C22 within Branch C')
+                }
+            )
+        }
+    }
+}
