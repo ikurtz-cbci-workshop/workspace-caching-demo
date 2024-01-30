@@ -19,7 +19,7 @@ pipeline {
     }
     stages {
         stage('Parallel Stage') {
-        agent { label 'maven' }
+            agent { label 'maven' }
             failFast true
             parallel {
                 stage('Branch A') {
