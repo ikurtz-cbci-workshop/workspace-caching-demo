@@ -14,17 +14,12 @@ def executeScript(stageName, iterations) {
 }
 pipeline {
     agent none
-
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "M3"
-    }
     environment {
         MAX = 1
     }
     stages {
-      agent { label 'maven' }
         stage('Parallel Stage') {
+        agent { label 'maven' }
             failFast true
             parallel {
                 stage('Branch A') {
